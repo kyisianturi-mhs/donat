@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja - Donat Lukkya</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="checkout-body">
+    <div class="form-container">
+        <h2>Keranjang Belanja Anda</h2>
+        <div id="cart-items" class="cart-list">
+            </div>
+        <hr>
+        <div class="total-area">
+            <strong>Total: Rp <span id="total-price">0</span></strong>
+        </div>
+
+        <form id="waForm">
+            <input type="text" id="nama" placeholder="Nama Anda" required>
+            <textarea id="alamat" placeholder="Alamat Lengkap" required></textarea>
+            <button type="submit" class="btn-wa">Pesan Sekarang ke WhatsApp</button>
+            <button type="button" onclick="clearCart()" class="btn-clear">Kosongkan Keranjang</button>
+        </form>
+        <a href="index.html" style="display:block; text-align:center; margin-top:10px; color:#8d6e63;">Kembali Belanja</a>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartList = document.getElementById('cart-items');
+        let total = 0;
+
+        if(cart.length === 0) {
+            cartList.innerHTML = "<p>Keranjang masih kosong.</p>";
+        } else {
+            cart.forEach((item) => {
+                const p = document.createElement('p');
+                p.innerText = `${item.name} - Rp ${item.price.toLocaleString()}`;
+                cartList.appendChild(p);
+                total += item.price;
+            });
+            document.getElementById('total-price').innerText = total.toLocaleString();
+        }
+
+        document.getElementById('waForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(cart.length === 0) return alert("Keranjang kosong!");
+            
+            const nama = document.getElementById('nama').value;
+            const alamat = document.getElementById('alamat').value;
+            let listPesanan = cart.map(i => `- ${i.name} (Rp ${i.price})`).join('%0A');
+            
+            const msg = `Halo Donat Lukkya, saya mau pesan:%0A%0A*Nama:* ${nama}%0A*Pesanan:*%0A${listPesanan}%0A%0A*Total:* Rp ${total.toLocaleString()}%0A*Alamat:* ${alamat}`;
+            window.open(`https://wa.me/6283139263951?text=${msg}`, '_blank');
+        });
+
+        function clearCart() {
+            localStorage.removeItem('cart');
+            location.reload();
+        }
+    </script>
+</body>
+</html>

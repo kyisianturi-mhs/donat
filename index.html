@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donat Lukkya | Premium Artisan Donuts</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Donat<span>Lukkya.</span></div>
+        <div class="nav-right">
+            <a href="index.html">Home</a>
+            <a href="cekout.html" class="cart-btn">
+                <i class="fas fa-shopping-basket"></i>
+                <span id="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <span class="badge">🍩 Freshly Baked Everyday</span>
+            <h1>Manisnya Pas, <br><span>Lembutnya Juara.</span></h1>
+            <p>Pilih donat favoritmu dan tambahkan extra topping untuk sensasi rasa yang lebih kaya!</p>
+            <a href="#products" class="btn-primary">Pesan Sekarang</a>
+        </div>
+    </header>
+
+    <section id="products" class="products">
+        <div class="section-title">
+            <h2>Katalog Donat</h2>
+            <p>Harga otomatis menyesuaikan dengan extra topping yang kamu pilih</p>
+        </div>
+        
+        <div class="product-grid">
+            <div class="product-card" data-name="Chocolate Melt" data-baseprice="12000">
+                <div class="img-container"><img src="dcoklat.jpg" alt="Chocolate Melt"></div>
+                <h3>Chocolate Melt</h3>
+                <div class="card-footer">
+                    <span class="display-price">Rp 12.000</span>
+                    <select class="level-select" onchange="updatePriceDisplay(this)">
+                        <option value="0">Original (+0)</option>
+                        <option value="2000">Extra Meses (+2rb)</option>
+                        <option value="3000">Kacang Almond (+3rb)</option>
+                        <option value="5000">Double Choco (+5rb)</option>
+                    </select>
+                </div>
+                <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i> Tambah</button>
+            </div>
+
+            <div class="product-card" data-name="Strawberry Pink" data-baseprice="10000">
+                <div class="img-container"><img src="dstrowbery.jpg" alt="Strawberry Pink"></div>
+                <h3>Strawberry Pink</h3>
+                <div class="card-footer">
+                    <span class="display-price">Rp 10.000</span>
+                    <select class="level-select" onchange="updatePriceDisplay(this)">
+                        <option value="0">Original (+0)</option>
+                        <option value="2000">Springkle (+2rb)</option>
+                        <option value="3000">Selai Strawberry (+3rb)</option>
+                    </select>
+                </div>
+                <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i> Tambah</button>
+            </div>
+
+            <div class="product-card" data-name="Vanilla Snow" data-baseprice="10000">
+                <div class="img-container"><img src="dvanila.jpg" alt="Vanilla Snow"></div>
+                <h3>Vanilla Snow</h3>
+                <div class="card-footer">
+                    <span class="display-price">Rp 10.000</span>
+                    <select class="level-select" onchange="updatePriceDisplay(this)">
+                        <option value="0">Original (+0)</option>
+                        <option value="2000">Oreo Crumbs (+2rb)</option>
+                        <option value="4000">Cheese Grated (+4rb)</option>
+                    </select>
+                </div>
+                <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i> Tambah</button>
+            </div>
+            <div class="product-card" data-name=" Macha" data-baseprice="10000">
+                <div class="img-container"><img src="dmacha.jpg" alt="Vanilla Snow"></div>
+                <h3>Macha</h3>
+                <div class="card-footer">
+                    <span class="display-price">Rp 10.000</span>
+                    <select class="level-select" onchange="updatePriceDisplay(this)">
+                        <option value="0">Original (+0)</option>
+                        <option value="2000">Oreo Crumbs (+2rb)</option>
+                        <option value="4000">Cheese Grated (+4rb)</option>
+                    </select>
+                </div>
+                <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i> Tambah</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Donat Lukkya - Premium Artisan Donuts</p>
+    </footer>
+
+    <script>
+        function updatePriceDisplay(select) {
+            const card = select.closest('.product-card');
+            const basePrice = parseInt(card.dataset.baseprice);
+            const extra = parseInt(select.value);
+            const total = basePrice + extra;
+            card.querySelector('.display-price').innerText = "Rp " + total.toLocaleString('id-ID');
+        }
+
+        function addToCart(btn) {
+            const card = btn.closest('.product-card');
+            const select = card.querySelector('.level-select');
+            const name = card.dataset.name;
+            const basePrice = parseInt(card.dataset.baseprice);
+            const extra = parseInt(select.value);
+            const toppingText = select.options[select.selectedIndex].text.split(' (')[0];
+            
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.push({ 
+                name: name, 
+                price: basePrice + extra, 
+                variant: toppingText 
+            });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            document.getElementById('cart-count').innerText = cart.length;
+            
+            btn.innerHTML = '✅ Masuk!';
+            btn.style.background = "#27ae60";
+            setTimeout(() => { 
+                btn.innerHTML = '<i class="fas fa-plus"></i> Tambah'; 
+                btn.style.background = "#2d3436";
+            }, 1000);
+        }
+
+        window.onload = () => {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            document.getElementById('cart-count').innerText = cart.length;
+        };
+    </script>
+</body>
+</html>
